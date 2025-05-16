@@ -1,9 +1,15 @@
+import { Request, Response } from 'express';
+import { Model } from 'mongoose';
+import { IMusic } from '../models/music';
+
 class MusicController {
-    constructor(musicModel) {
+    private musicModel: Model<IMusic>;
+
+    constructor(musicModel: Model<IMusic>) {
         this.musicModel = musicModel;
     }
 
-    async getAllMusic(req, res) {
+    async getAllMusic(req: Request, res: Response) {
         try {
             const musicList = await this.musicModel.find();
             res.status(200).json(musicList);
@@ -12,7 +18,7 @@ class MusicController {
         }
     }
 
-    async addMusic(req, res) {
+    async addMusic(req: Request, res: Response) {
         const { title, artist, genre } = req.body;
         const newMusic = new this.musicModel({ title, artist, genre });
 

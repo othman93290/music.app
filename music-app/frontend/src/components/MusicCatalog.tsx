@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from 'react';
 
+interface Music {
+    _id: string;
+    title: string;
+    artist: string;
+    genre: string;
+}
+
 const MusicCatalog: React.FC = () => {
-    const [musicList, setMusicList] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [musicList, setMusicList] = useState<Music[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchMusic = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/music');
-                const data = await response.json();
+        fetch('/api/music')
+            .then(res => res.json())
+            .then(data => {
                 setMusicList(data);
-            } catch (error) {
-                console.error('Error fetching music:', error);
-            } finally {
                 setLoading(false);
-            }
-        };
-
-        fetchMusic();
+            });
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <div>Chargement...</div>;
 
     return (
         <div>
-            <h1>Music Catalog</h1>
+            <h2>Catalogue de Musique</h2>
             <ul>
-                {musicList.map((music) => (
+                {musicList.map(music => (
                     <li key={music._id}>
-                        <h2>{music.title}</h2>
-                        <p>Artist: {music.artist}</p>
-                        <p>Genre: {music.genre}</p>
+                        <strong>{music.title}</strong> — {music.artist} ({music.genre})
                     </li>
                 ))}
             </ul>

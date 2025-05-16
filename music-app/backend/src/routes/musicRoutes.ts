@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import MusicController from '../controllers/musicController';
+import Music from '../models/music';
 
 const router = Router();
-const musicController = new MusicController();
+const musicController = new MusicController(Music);
 
-export function setRoutes(app) {
-    app.use('/api/music', router);
+router.get('/', (req, res) => musicController.getAllMusic(req, res));
+router.post('/', (req, res) => musicController.addMusic(req, res));
 
-    router.get('/', musicController.getAllMusic);
-    router.post('/', musicController.addMusic);
-}
+export default router;
